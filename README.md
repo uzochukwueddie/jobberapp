@@ -11,8 +11,8 @@ This repo contains all codes for the ECommerce freelance marketplace application
 ### Microservices
 * The `microservices` folder contains all the backend code for the application's services.
 * The services can be started either individually from the terminal or via docker compose.
-* [Microservices README file](../jobberapp/microservices/README.md)
+* [Microservices README file](https://github.com/uzochukwueddie/jobberapp/blob/main/microservices/README.md)
 
 ### Volumes
 * The `volumes` folder contains files that are used to run services for local development.
-* [Volumes README file](../jobberapp/volumes/README.md)
+* [Volumes README file](https://github.com/uzochukwueddie/jobberapp/blob/main/volumes/README.md)
