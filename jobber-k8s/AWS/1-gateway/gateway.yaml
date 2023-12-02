@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jobber-gateway
+  namespace: production
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jobber-gateway
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25% 
+      maxSurge: 25%
+  template:
+    metadata:
+      labels:
+        app: jobber-gateway
+    spec:
+      containers:
+      - name: jobber-gateway
+        image: uzochukwueddie/jobber-gateway:stable
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: '0.5'
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            memory: 150Mi
+        ports:
+        - name: gateway
+          containerPort: 4000
+        env:
+          - name: ENABLE_APM
+            value: '1'
+          - name: NODE_ENV
+            value: 'production'
+          - name: SECRET_KEY_ONE
+            valueFrom:
+              secretKeyRef:
+                name: jobber-backend-secret
+                key: secret-key-one
+          - name: SECRET_KEY_TWO
+            valueFrom:
+              secretKeyRef:
+                name: jobber-backend-secret
+                key: secret-key-two
+          - name: GATEWAY_JWT_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: jobber-backend-secret
+                key: gateway-jwt-token
+          - name: JWT_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: jobber-backend-secret
+                key: jwt-token
+          - name: CLIENT_URL
+            value: 'https://jobberapp.live'
+          - name: AUTH_BASE_URL
+            value: 'http://jobber-auth.production.svc.cluster.local:4002'
+          - name: USERS_BASE_URL
+            value: 'http://jobber-users.production.svc.cluster.local:4003'
+          - name: GIG_BASE_URL
+            value: 'http://jobber-gig.production.svc.cluster.local:4004'
+          - name: MESSAGE_BASE_URL
+            value: 'http://jobber-chat.production.svc.cluster.local:4005'
+          - name: ORDER_BASE_URL
+            value: 'http://jobber-order.production.svc.cluster.local:4006'
+          - name: REVIEW_BASE_URL
+            value: 'http://jobber-review.production.svc.cluster.local:4007'
+          - name: REDIS_HOST
+            valueFrom:
+              secretKeyRef:
+                name: jobber-backend-secret
+                key: jobber-redis-host
+          - name: ELASTIC_SEARCH_URL
+            valueFrom:
+              secretKeyRef:
+                name: jobber-backend-secret
+                key: jobber-elasticsearch-url
+          - name: ELASTIC_APM_SERVER_URL
+            valueFrom:
+              secretKeyRef:
+                name: jobber-backend-secret
+                key:  jobber-elastic-apm-server-url
+          - name: ELASTIC_APM_SECRET_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: jobber-backend-secret
+                key: jobber-elastic-apm-secret-token

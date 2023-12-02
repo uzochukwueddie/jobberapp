@@ -1,0 +1,198 @@
+<div>
+  <div></div>
+  <div tabindex="-1"></div>
+  <div>
+    <div>
+      <u></u>
+
+      <div style="margin: 0 !important; padding: 0 !important;">
+        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+          <tbody>
+            <tr>
+              <td width="100%" align="center" valign="top" bgcolor="#eeeeee" height="20"></td>
+            </tr>
+            <tr>
+              <td bgcolor="#eeeeee" align="center" style="padding: 0px 15px 0px 15px;">
+                <table bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%"
+                  style="max-width: 600px;">
+                  <tbody>
+                    <tr>
+                      <td>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                          <tbody>
+                            <tr>
+                              <td align="center" style="padding: 40px 40px 0px 40px;">
+                                <a href="<%= appLink %>" target="_blank">
+                                  <img src="<%= appIcon %>" width="70" border="0" style="vertical-align: middle;"
+                                    class="CToWUd" data-bit="iit" />
+                                </a>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td align="center"
+                                style="font-size: 18px; color: #0e0e0f; font-weight: 700; font-family: Helvetica Neue; line-height: 28px; vertical-align: top; text-align: center; padding: 35px 40px 0px 40px;">
+                                <strong>
+                                  You just received an order from <%= buyerUsername %><br />
+                                    Please review the requirements below:
+                                </strong>
+                              </td>
+                            </tr>
+
+                            <tr>
+                              <td align="center" bgcolor="#ffffff" height="1" style="padding: 40px 40px 5px;"
+                                valign="top" width="100%">
+                                <table cellpadding="0" cellspacing="0" width="100%">
+                                  <tbody>
+                                    <tr>
+                                      <td style="border-top: 1px solid #e4e4e4;"></td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </td>
+                            </tr>
+
+                            <tr>
+                              <td
+                                style="font: 16px/22px 'Helvetica Neue', Arial, 'sans-serif'; text-align: left; color: #555555; padding: 40px 40px 0 40px;">
+                                <p>
+                                  Hi <%= sellerUsername %>,
+                                </p>
+                                <p>
+                                  You've just received an order from <%= buyerUsername %>! Feels good, right?<br />
+                                  Order
+                                  <a href="<%= orderUrl %>"
+                                    style="color: #4aa1f3; text-decoration: none;" target="_blank"
+                                    >
+                                    #<%= orderId %>
+                                  </a>
+                                  is due <strong>
+                                    <%= orderDue %>
+                                  </strong>.
+                                </p>
+
+                                <table align="center" style="color: #555555; margin: 0; width: 100%;">
+                                  <tbody>
+                                    <tr>
+                                      <td style="color: #555555; border: 1px solid #aeaeae; border-radius: 3px;">
+                                        <table cellspacing="0" cellpadding="8"
+                                          style="border: none; border-bottom: 1px solid #aeaeae; width: 100%; font-family: arial;">
+                                          <tbody>
+                                            <tr>
+                                              <td
+                                                style="color: #000000; border-bottom: 1px solid #aeaeae; font-weight: bold; text-align: left;">
+                                                Item
+                                              </td>
+                                              <td
+                                                style="color: #000000; border-bottom: 1px solid #aeaeae; font-weight: bold; width: 20%;">
+                                                Qty
+                                              </td>
+                                              <td
+                                                style="color: #000000; border-bottom: 1px solid #aeaeae; font-weight: bold; width: 40px; text-align: right;">
+                                                Price
+                                              </td>
+                                            </tr>
+                                            <tr>
+                                              <td
+                                                style="color: #555555; font-weight: bold; text-align: left; border-right: 1px solid #aeaeae; border-bottom: 1px solid #aeaeae;">
+                                                <%= title %> -
+                                                  <span style="font-weight: normal;">
+                                                    <%= description %>
+                                                  </span>
+                                              </td>
+
+                                              <td
+                                                style="color: #555555; border-right: 1px solid #aeaeae; border-bottom: 1px solid #aeaeae;">
+                                                × 1</td>
+                                              <td
+                                                style="text-align: right; color: #555555; border-bottom: 1px solid #aeaeae;">
+                                                $<%= amount %>
+                                              </td>
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                        <div
+                                          style="text-align: right; padding: 10px 8px 10px 0px; color: #000000; font-size: 16px; font-family: arial; font-weight: 700;">
+                                          Total: $<%= amount %>
+                                        </div>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                                <p style="font-weight: 500; padding-top: 20px;">
+                                  The buyer has provided the following order requirements:
+                                </p>
+
+                                <ol style="margin: 0; padding: 0 20px;">
+                                  <li>
+                                    <p style="margin-bottom: 0;">Requirements</p>
+
+                                    <p style="margin: 0;">
+                                      <%= requirements %>
+                                    </p>
+                                  </li>
+                                </ol>
+
+                                <table cellpadding="0" cellspacing="0" width="100%" style="margin-top: 50px;">
+                                  <tbody>
+                                    <tr>
+                                      <td style="border-top: 1px solid #e4e4e4;"></td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <table width="100%" border="0" cellspacing="0" cellpadding="0"
+                                  style="margin: 30px 0px;">
+                                  <tbody>
+                                    <tr>
+                                      <td align="center" style="text-align: center;">
+                                        <p
+                                          style="font: 16px/22px 'Helvetica Neue', Arial, 'sans-serif'; text-align: center; color: #555555; padding: 0 0 20px 0; margin: 0;">
+                                          Got everything you need?
+                                        </p>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td align="center" style="text-align: center;">
+                                        <a name="m_-4412857948817324922_CTA" bgcolor="#1dbf73" style="
+                                            color: #ffffff;
+                                            background-color: #4aa1f3;
+                                            display: inline-block;
+                                            font-family: Helvetica Neue;
+                                            font-size: 16px;
+                                            line-height: 30px;
+                                            text-align: center;
+                                            font-weight: bold;
+                                            text-decoration: none;
+                                            padding: 5px 20px;
+                                            border-radius: 3px;
+                                            text-transform: none;"
+                                          href="<%= orderUrl %>" target="_blank">
+                                          View Order
+                                        </a>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td width="100%" align="center" valign="top" bgcolor="#ffffff" height="45"></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

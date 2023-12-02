@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jobber-gig
+  namespace: production
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jobber-gig
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25% 
+      maxSurge: 25%
+  template:
+    metadata:
+      labels:
+        app: jobber-gig
+    spec:
+      containers:
+      - name: jobber-gig
+        image: uzochukwueddie/jobber-gig:stable
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: '0.5'
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            memory: 150Mi
+        ports:
+        - name: gig
+          containerPort: 4004
+        env:
+          - name: ENABLE_APM
+            value: '1'
+          - name: NODE_ENV
+            value: 'production'
+          - name: GATEWAY_JWT_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: jobber-backend-secret
+                key: gateway-jwt-token
+          - name: JWT_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: jobber-backend-secret
+                key: jwt-token
+          - name: RABBITMQ_ENDPOINT
+            valueFrom:
+              secretKeyRef:
+                name: jobber-backend-secret
+                key: jobber-rabbitmq-endpoint
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: jobber-backend-secret
+                key: mongo-database-url
+          - name: CLOUD_NAME
+            valueFrom:
+              secretKeyRef:
+                name: jobber-backend-secret
+                key: cloud-name
+          - name: CLOUD_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: jobber-backend-secret
+                key: cloud-api-key
+          - name: CLOUD_API_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: jobber-backend-secret
+                key: cloud-api-secret
+          - name: API_GATEWAY_URL
+            value: 'http://jobber-gateway.production.svc.cluster.local:4000'
+          - name: REDIS_HOST
+            valueFrom:
+              secretKeyRef:
+                name: jobber-backend-secret
+                key: jobber-redis-host
+          - name: ELASTIC_SEARCH_URL
+            valueFrom:
+              secretKeyRef:
+                name: jobber-backend-secret
+                key: jobber-elasticsearch-url
+          - name: ELASTIC_APM_SERVER_URL
+            valueFrom:
+              secretKeyRef:
+                name: jobber-backend-secret
+                key:  jobber-elastic-apm-server-url
+          - name: ELASTIC_APM_SECRET_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: jobber-backend-secret
+                key: jobber-elastic-apm-secret-token

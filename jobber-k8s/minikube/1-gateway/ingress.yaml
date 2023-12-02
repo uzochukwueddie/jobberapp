@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jobber-gateway-ingress
+  namespace: production
+spec:
+  ingressClassName: nginx
+  defaultBackend:
+    service:
+      name: jobber-gateway
+      port: 
+        number: 4000
+  tls:
+    - hosts:
+      - jobberapp.com
+      secretName: gateway-ingress-tls
+  rules:
+  - host: jobberapp.com
+    http:
+      paths:
+      - path: /api/gateway/v1
+        pathType: Prefix
+        backend:
+          service:
+            name: jobber-gateway
+            port: 
+              number: 4000

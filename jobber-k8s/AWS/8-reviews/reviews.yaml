@@ -1,0 +1,105 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jobber-review
+  namespace: production
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: jobber-review
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  template:
+    metadata:
+      labels:
+        app: jobber-review
+    spec:
+      containers:
+      - name: jobber-review
+        image: uzochukwueddie/jobber-review:stable
+        imagePullPolicy: Always
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "0.5"
+          requests:
+            cpu: 100m
+            memory: 150Mi
+        ports:
+        - name: review
+          containerPort: 4007
+        env:
+          - name: ENABLE_APM
+            value: '1'
+          - name: NODE_ENV
+            value: 'production'
+          - name: CLUSTER_TYPE
+            value: 'AWS'
+          - name: GATEWAY_JWT_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: jobber-backend-secret
+                key: gateway-jwt-token
+          - name: JWT_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: jobber-backend-secret
+                key: jwt-token
+          - name: RABBITMQ_ENDPOINT
+            valueFrom:
+              secretKeyRef:
+                name: jobber-backend-secret
+                key: jobber-rabbitmq-endpoint
+          - name: DATABASE_HOST
+            valueFrom:
+              secretKeyRef:
+                name: jobber-backend-secret
+                key: jobber-postgres-host
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                name: jobber-backend-secret
+                key: jobber-postgres-user
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: jobber-backend-secret
+                key: jobber-postgres-password
+          - name: DATABASE_NAME
+            value: 'jobber_reviews'
+          - name: CLOUD_NAME
+            valueFrom:
+              secretKeyRef:
+                name: jobber-backend-secret
+                key: cloud-name
+          - name: CLOUD_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: jobber-backend-secret
+                key: cloud-api-key
+          - name: CLOUD_API_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: jobber-backend-secret
+                key: cloud-api-secret
+          - name: API_GATEWAY_URL
+            value: 'http://jobber-gateway.production.svc.cluster.local:4000'
+          - name: ELASTIC_SEARCH_URL
+            valueFrom:
+              secretKeyRef:
+                name: jobber-backend-secret
+                key: jobber-elasticsearch-url
+          - name: ELASTIC_APM_SERVER_URL
+            valueFrom:
+              secretKeyRef:
+                name: jobber-backend-secret
+                key:  jobber-elastic-apm-server-url
+          - name: ELASTIC_APM_SECRET_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: jobber-backend-secret
+                key: jobber-elastic-apm-secret-token

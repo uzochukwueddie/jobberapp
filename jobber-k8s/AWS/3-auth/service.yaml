@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: jobber-auth
+  namespace: production
+spec:
+  type: ClusterIP
+  selector:
+    app: jobber-auth
+  ports:
+  - name: auth
+    port: 4002
+    targetPort: 4002
+    protocol: TCP

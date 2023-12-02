@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: jobber-gateway
+  namespace: production
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: api.jobberapp.xyz
+    external-dns.alpha.kubernetes.io/ttl: "60"
+spec:
+  type: ClusterIP
+  selector:
+    app: jobber-gateway
+  ports:
+  - name: gateway
+    port: 4000
+    targetPort: 4000
+    protocol: TCP

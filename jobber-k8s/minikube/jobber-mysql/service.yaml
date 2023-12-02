@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: jobber-mysql
+  namespace: production
+spec:
+  type: ClusterIP
+  selector:
+    app: jobber-mysql
+  ports:
+  - name: jobber-mysql
+    port: 3306
+    targetPort: 3306

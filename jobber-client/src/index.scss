@@ -1,0 +1,168 @@
+/* To ignore the warning for @tailwind
+go to vscode settings, search for unknown, select scss and select ignore
+*/
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400&display=swap";
+@import "react-toastify/dist/ReactToastify.css";
+@import "react-quill/dist/quill.snow.css";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  outline: none;
+}
+
+*,
+::after,
+::before {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  background-color: transparent;
+  color: #62646a;
+  // font: 400 16px/24px Macan,Helvetica Neue,Helvetica,Arial,sans-serif;
+  // font-family : Urbanist, sans-serif;
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  cursor: default;
+  overflow: auto;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  display: none;
+}
+::-webkit-scrollbar-track {
+  background: white;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgb(173, 173, 173);
+}
+
+.ql-container {
+  background-color: #fff !important;
+  height: 260px !important;
+  font-size: 16px !important;
+  font-family: inherit !important;
+  overflow: scroll !important;
+  border: none !important;
+}
+
+.ql-toolbar {
+  border: none !important;
+  border-bottom: 1px solid #e8e8e8 !important;
+}
+
+th {
+  border-bottom: 1px solid #e8e8e8;
+}
+
+tbody {
+  tr:last-child {
+    border: none;
+  }
+}
+
+.alerts {
+  padding: 0.5rem 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.alert-error {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  color: #721c24;
+}
+
+.alert-success {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+
+.alert-warning {
+  color: #ffffff;
+  background-color: #f7b124;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.hide-scroll-bar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hide-scroll-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.status {
+  font-weight: bold;
+  font-size: 12px !important;
+  color: white;
+  padding: 4px 5px;
+  text-align: center;
+  // margin-left: 15px;
+  border-radius: 5px;
+  text-transform: uppercase;
+}
+
+.inprogress {
+  background: #50b5ff;
+}
+
+.delivered {
+  background-color: #f76f87;
+}
+
+.completed {
+  background-color: #5cb85c;
+}
+
+.cancelled {
+  background-color: #74767e;
+}
+
+.INPROGRESS {
+  color: #50b5ff;
+  font-style: italic;
+}
+
+.DELIVERED {
+  color: #50b5ff;
+}
+
+.COMPLETED {
+  color: #5cb85c;
+}
+
+.CANCELLED {
+  color: #74767e;
+}
+
+.zIndexDropdown {
+  z-index: 100 !important;
+}

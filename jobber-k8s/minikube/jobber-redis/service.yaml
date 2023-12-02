@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: jobber-redis
+  namespace: production
+spec:
+  type: ClusterIP
+  selector:
+    app: jobber-redis
+  ports:
+  - name: jobber-redis
+    port: 6379
+    targetPort: 6379

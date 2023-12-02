@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: jobber-frontend
+  namespace: production
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: jobberapp.live
+    external-dns.alpha.kubernetes.io/ttl: "60"
+spec:
+  type: ClusterIP
+  selector:
+    app: jobber-frontend
+  ports:
+  - name: frontend
+    port: 80
+    targetPort: frontend
+    protocol: TCP

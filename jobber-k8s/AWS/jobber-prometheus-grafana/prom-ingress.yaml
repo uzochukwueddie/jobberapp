@@ -1,0 +1,46 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jobber-prometheus-ingress
+  namespace: prometheus
+  annotations:
+    alb.ingress.kubernetes.io/load-balancer-name: jobber-prometheus-ingress
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
+    alb.ingress.kubernetes.io/healthcheck-port: "9090"
+    alb.ingress.kubernetes.io/healthcheck-path: /healthy
+    alb.ingress.kubernetes.io/healthcheck-interval-seconds: '120'
+    alb.ingress.kubernetes.io/success-codes: '200'
+    alb.ingress.kubernetes.io/healthy-threshold-count: '2'
+    alb.ingress.kubernetes.io/unhealthy-threshold-count: '10'
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    alb.ingress.kubernetes.io/subnets: subnet-0851316ddba1d8781,subnet-038e359f30b2114b6 # add your own public subnet ids
+    alb.ingress.kubernetes.io/auth-session-cookie: session
+    alb.ingress.kubernetes.io/target-group-attributes: stickiness.enabled=true,stickiness.type=app_cookie,stickiness.app_cookie.cookie_name=session,deregistration_delay.timeout_seconds=60
+    alb.ingress.kubernetes.io/target-type: ip
+    # this is the security group id of the worker nodes remoteAccess security group
+    alb.ingress.kubernetes.io/security-groups: sg-01005158fd0e0d284
+    external-dns.alpha.kubernetes.io/hostname: prometheus.jobberapp.xyz
+
+spec:
+  ingressClassName: alb
+  defaultBackend:
+    service:
+      name: prometheus-server
+      port: 
+        number: 80
+  tls:
+    - hosts:
+      - "*.jobberapp.xyz"
+  rules:
+  - host: prometheus.jobberapp.xyz
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: prometheus-server
+            port: 
+              number: 80

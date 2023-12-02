@@ -1,0 +1,288 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: heartbeat
+  namespace: production
+  labels:
+    k8s-app: heartbeat
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: heartbeat
+  labels:
+    k8s-app: heartbeat
+rules:
+- apiGroups: [""]
+  resources:
+  - nodes
+  - namespaces
+  - pods
+  - services
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["apps"]
+  resources:
+    - replicasets
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["batch"]
+  resources:
+    - jobs
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: heartbeat
+  # should be the namespace where heartbeat is running
+  namespace: production
+  labels:
+    k8s-app: heartbeat
+rules:
+  - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    verbs: ["get", "create", "update"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: heartbeat-kubeadm-config
+  namespace: production
+  labels:
+    k8s-app: heartbeat
+rules:
+  - apiGroups: [""]
+    resources:
+      - configmaps
+    resourceNames:
+      - kubeadm-config
+    verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: heartbeat
+subjects:
+- kind: ServiceAccount
+  name: heartbeat
+  namespace: production
+roleRef:
+  kind: ClusterRole
+  name: heartbeat
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: heartbeat
+  namespace: production
+subjects:
+  - kind: ServiceAccount
+    name: heartbeat
+    namespace: production
+roleRef:
+  kind: Role
+  name: heartbeat
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: heartbeat-kubeadm-config
+  namespace: production
+subjects:
+  - kind: ServiceAccount
+    name: heartbeat
+    namespace: production
+roleRef:
+  kind: Role
+  name: heartbeat-kubeadm-config
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: heartbeat-deployment-config
+  namespace: production
+  labels:
+    k8s-app: heartbeat
+data:
+  heartbeat.yml: |-
+    heartbeat.monitors:
+      - type: http
+        id: jobber-frontend
+        name: Jobber Client Application
+        schedule: '@every 5s'
+        hosts: ["https://jobberapp.live"]
+        check.request.method: GET
+        check.response.status: [200]
+
+      - type: http
+        id: jobber-api-gateway
+        name: Jobber API Gateway Service
+        schedule: '@every 5s'
+        hosts: ["http://jobber-gateway.production.svc.cluster.local:4000/gateway-health"]
+        check.request.method: GET
+        check.response.status: [200]
+
+      - type: http
+        id: jobber-notification
+        name: Jobber Notification Service
+        schedule: '@every 5s'
+        hosts: ["http://jobber-notification.production.svc.cluster.local:4001/notification-health"]
+        check.request.method: GET
+        check.response.status: [200]
+
+      - type: http
+        id: jobber-auth
+        name: Jobber Auth Service
+        schedule: '@every 5s'
+        hosts: ["http://jobber-auth.production.svc.cluster.local:4002/auth-health"]
+        check.request.method: GET
+        check.response.status: [200]
+
+      - type: http
+        id: jobber-users
+        name: Jobber Users Service
+        schedule: '@every 5s'
+        hosts: ["http://jobber-users.production.svc.cluster.local:4003/user-health"]
+        check.request.method: GET
+        check.response.status: [200]
+
+      - type: http
+        id: jobber-gigs
+        name: Jobber Gigs Service
+        schedule: '@every 5s'
+        hosts: ["http://jobber-gig.production.svc.cluster.local:4004/gig-health"]
+        check.request.method: GET
+        check.response.status: [200]
+
+      - type: http
+        id: jobber-chat
+        name: Jobber Chat Service
+        schedule: '@every 5s'
+        hosts: ["http://jobber-chat.production.svc.cluster.local:4005/chat-health"]
+        check.request.method: GET
+        check.response.status: [200]
+
+      - type: http
+        id: jobber-orders
+        name: Jobber Orders Service
+        schedule: '@every 5s'
+        hosts: ["http://jobber-order.production.svc.cluster.local:4006/order-health"]
+        check.request.method: GET
+        check.response.status: [200]
+
+      - type: http
+        id: jobber-reviews
+        name: Jobber Reviews Service
+        schedule: '@every 5s'
+        urls: ["http://jobber-review.production.svc.cluster.local:4007/review-health"]
+        check.request.method: GET
+        check.response.status: [200]
+
+    processors:
+    - add_cloud_metadata: ~
+    - add_docker_metadata: ~
+
+    monitoring.enabled: true
+
+    cloud.id: ${ELASTIC_CLOUD_ID}
+    cloud.auth: ${ELASTIC_CLOUD_AUTH}
+
+    output.elasticsearch:
+      hosts: ['${ELASTICSEARCH_HOST:elasticsearch}:${ELASTICSEARCH_PORT:9200}']
+      username: ${ELASTICSEARCH_USERNAME}
+      password: ${ELASTICSEARCH_PASSWORD}
+---
+# Deploy singleton instance in the whole cluster for some unique data sources, like kube-state-metrics
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: heartbeat
+  namespace: production
+  labels:
+    k8s-app: heartbeat
+spec:
+  selector:
+    matchLabels:
+      k8s-app: heartbeat
+  template:
+    metadata:
+      labels:
+        k8s-app: heartbeat
+    spec:
+      serviceAccountName: heartbeat
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      containers:
+      - name: heartbeat
+        image: docker.elastic.co/beats/heartbeat:8.11.0
+        args: [
+          "-c", "/usr/share/heartbeat/heartbeat.yml",
+          "-e",
+        ]
+        env:
+        - name: ELASTICSEARCH_PORT
+          value: "9200"
+        - name: ELASTICSEARCH_HOST
+          valueFrom:
+            secretKeyRef:
+              name: jobber-backend-secret
+              key: jobber-elasticsearch-host
+        - name: ELASTICSEARCH_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: jobber-backend-secret
+              key: jobber-elasticsearch-username
+        - name: ELASTICSEARCH_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: jobber-backend-secret
+              key: jobber-elasticsearch-password
+        - name: ELASTIC_CLOUD_ID
+          valueFrom:
+            secretKeyRef:
+              name: jobber-backend-secret
+              key: jobber-elastic-cloud-id
+        - name: ELASTIC_CLOUD_AUTH
+          valueFrom:
+            secretKeyRef:
+              name: jobber-backend-secret
+              key: jobber-elastic-cloud-auth
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        securityContext:
+          runAsUser: 0
+        resources:
+          limits:
+            memory: 1536Mi
+            cpu: 2000m 
+          requests:
+            # for synthetics, 2 full cores is a good starting point for relatively consistent perform of a single concurrent check
+            # For lightweight checks as low as 100m is fine
+            cpu: 100m 
+            # A high value like this is encouraged for browser based monitors. 
+            # Lightweight checks use substantially less, even 128Mi is fine for those.
+            memory: 150Mi 
+        volumeMounts:
+        - name: config
+          mountPath: /usr/share/heartbeat/heartbeat.yml
+          readOnly: true
+          subPath: heartbeat.yml
+        - name: data
+          mountPath: /usr/share/heartbeat/data
+      volumes:
+      - name: config
+        configMap:
+          defaultMode: 0600
+          name: heartbeat-deployment-config
+      - name: data
+        hostPath:
+          path: /var/lib/heartbeat-data
+          type: DirectoryOrCreate
+
+---

@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kibana-config
+  namespace: production
+data:
+  kibana.yml: |
+    server.name: kibana
+    server.host: "0.0.0.0"
+    server.port: 5601
+
+    # Elasticsearch Connection
+    elasticsearch.hosts: ["http://jobber-elastic.production.svc.cluster.local:9200"]
+
+    monitoring.ui.container.elasticsearch.enabled: true
+    xpack.fleet.enabled: true
+    xpack.fleet.agents.enabled: true
+    xpack.fleet.agents.elasticsearch.hosts: ["http://jobber-elastic.production.svc.cluster.local:9200"]
+    xpack.reporting.roles.enabled: true
+    xpack.fleet.agentIdVerificationEnabled: false
+    xpack.security.encryptionKey: fhjskloppd678ehkdfdlliverpoolfcr
+    xpack.encryptedSavedObjects.encryptionKey: fhjskloppd678ehkdfdlliverpoolfcr
+
+    ## Add policy for apm-server integration
+    xpack.fleet.packages:
+      - name: apm
+        version: latest
+    xpack.fleet.agentPolicies:
+      - name: Agent policy 1
+        id: agent-policy-1
+        namespace: default
+        monitoring_enabled:
+          - logs
+          - metrics
+        package_policies:
+          - name: apm-1
+            id: default-apm
+            package:
+              name: apm
+
+    ## Misc
+    elasticsearch.requestTimeout: 90000

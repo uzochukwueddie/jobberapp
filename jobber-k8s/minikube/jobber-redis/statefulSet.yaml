@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: jobber-redis
+  namespace: production
+spec:
+  serviceName: jobber-redis
+  # the simple reason why I am not using 2 or 3 replicas (so that 1 is the master and the others followers)
+  # is because I don't have a lot of space on my machine and minikube is just one single node. We have
+  # other objects that will be created and I don't want minikube to run out of memory
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jobber-redis
+  template:
+    metadata:
+      labels:
+        app: jobber-redis
+    spec:
+      initContainers:
+      - name: config
+        image: redis:alpine
+        command: [ "sh", "-c" ]
+        args:
+          - |
+            cp /tmp/redis/redis.conf /etc/redis/redis.conf
+            
+            echo "finding master..."
+            MASTER_FQDN=`hostname  -f | sed -e 's/jobber-redis-[0-9]\./jobber-redis-0./'`
+            if [ "$(redis-cli -h sentinel -p 5000 ping)" != "PONG" ]; then
+              echo "master not found, defaulting to jobber-redis-0"
+
+              if [ "$(hostname)" == "jobber-redis-0" ]; then
+                echo "this is jobber-redis-0, not updating config..."
+              else
+                echo "updating redis.conf..."
+                echo "slaveof $MASTER_FQDN 6379" >> /etc/redis/redis.conf
+              fi
+            else
+              echo "sentinel found, finding master"
+              MASTER="$(redis-cli -h sentinel -p 5000 sentinel get-master-addr-by-name mymaster | grep -E '(^jobber-redis-\d{1,})|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})')"
+              echo "master found : $MASTER, updating redis.conf"
+              echo "slaveof $MASTER 6379" >> /etc/redis/redis.conf
+            fi
+        volumeMounts:
+        - name: redis-config
+          mountPath: /etc/redis/
+        - name: config
+          mountPath: /tmp/redis/
+      containers:
+      - name: jobber-redis
+        image: redis:alpine
+        command: ["redis-server"]
+        args: ["/etc/redis/redis.conf"]
+        ports:
+        - containerPort: 6379
+          name: jobber-redis
+        readinessProbe:
+          periodSeconds: 10
+          tcpSocket:
+            port: jobber-redis
+        livenessProbe:
+          periodSeconds: 10
+          tcpSocket:
+            port: jobber-redis
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        - name: redis-config
+          mountPath: /etc/redis/
+      volumes:
+      - name: redis-config
+        emptyDir: {}
+      - name: config
+        configMap:
+          name: redis-config
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "redis-local-storage"
+      resources:
+        requests:
+          storage: 500Mi
