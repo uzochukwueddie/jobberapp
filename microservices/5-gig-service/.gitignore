@@ -11,6 +11,8 @@ yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
 
+.DS_Store
+
 build
 
 # Diagnostic reports (https://nodejs.org/api/report.html)

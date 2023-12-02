@@ -411,7 +411,7 @@ services:
     expose:
       - 22
     environment:
-      - JENKINS_AGENT_SSH_PUBKEY=ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDItd+rZzmICNATixPxjbnnRESe4+2O7wck8u3gOMsbjhPuQk+W4o9C2sVieTuKhYiWjrsYLcOl24nLJk034d/KlR9o0j0bwg3iJ3FvfzjhJgx+KVaOhZa3clMoMl9bdJeh39drzPvsQ8RdJnzRxIIj02NGEJ3pJYJ8jknbcDtf4CJF/hVYXne4C9UceNLmj1A1Apdx18CBd36zRmgaXWOkiHmlojH2M4v1eitNlCHYFRRIcQh2380zR3jQo4B7S2tzS+jA9gbfoMuRWdeJgkJ/ujOAjzb3hMNHwvyriDqfnOMa26J73FOLYhKHYmCzThipyf7bUowjB3nEL7+wlI9lmjZ/bFvekq4QRNN42RQcKNaCjS7JN7FAsgvSixaT9MWJtJN6ekupD27DI+GrcDKxYlpot2ufE16uI315FkDiVpheAGNPlZ9R3HxBFqeDWjZmKbRD8hwcjxFuOnDecmLABaHsmOkr2xN62tIdof0I337D8S1D52OQKrVJslCE0xs= smsdigitalgmbh@SMSs-MBP
+      - JENKINS_AGENT_SSH_PUBKEY=
 
 networks:
   elastic:

@@ -1,30 +1,32 @@
-# React + TypeScript + Vite
+## Freelance Marketplace Application
+* This application is built using these main tools
+  * `Vite`
+  * `React`
+  * `Typescript`
+  * `Tailwindcss`
+  * `Redux Toolkit`
+  * `RTK Query`
+  * `Stripe`
+  * `Elasticsearch`
+  * `Axios`
+  * `React Router DOM`
+  * `React Redux`
+  * `React Quill`
+  * `SocketIO Client`
+  * `ESlint and Prettier`
+* There are other tools and packages used.
+* You can update the version of `NodeJS` used inside the `Dockerfile`
+* Copy contents of `.env.dev` to `.env` file
+  * Create an account on `https://stripe.com`
+    * Go to developers page to get your api key for the client (it starts with `pk_`)
+    * Add the api key to `VITE_STRIPE_KEY`
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+### Create docker images
+* You can create your own docker image from this microservice.
+* Create an account on `hub.docker.com` or login if you already have one.
+* Make sure to login on your terminal as well.
+* Steps to build and push your image to docker hub
+  * `docker build -t <your-dockerhub-username>/jobber-frontend .`
+  * `docker tag <your-dockerhub-username>/jobber-frontend <your-dockerhub-username>/jobber-frontend:stable`
+  * `docker push <your-dockerhub-username>/jobber-frontend:stable`
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list

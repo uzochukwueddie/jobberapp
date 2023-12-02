@@ -18,7 +18,7 @@ pipeline {
 
   environment {
     DOCKER_CREDENTIALS = credentials("dockerhub")
-    IMAGE_NAME = "uzochukwueddie" + "/" + "jobber-gateway"
+    IMAGE_NAME = "<your-dockerhub-username>" + "/" + "jobber-gateway"
     IMAGE_TAG = "stable-${BUILD_NUMBER}"
   }
 
@@ -33,12 +33,14 @@ pipeline {
       steps {
         sh "[ -d pipeline ] || mkdir pipeline"
         dir("pipeline") {
-          git branch: 'main', credentialsId: 'github', url: 'https://github.com/uzochukwueddie/jenkins-automation'
+          // Add your jenkins automation url to url field
+          git branch: 'main', credentialsId: 'github', url: ''
           script {
             groovyMethods = load("functions.groovy")
           }
         }
-        git branch: 'main', credentialsId: 'github', url: 'https://github.com/uzochukwueddie/jobber-gateway'
+        // Add your gateway github url to url field
+        git branch: 'main', credentialsId: 'github', url: ''
         sh 'npm install'
       }
     }
@@ -81,7 +83,7 @@ pipeline {
 
     stage("Create New Pods") {
       steps {
-        withKubeCredentials(kubectlCredentials: [[caCertificate: '', clusterName: 'minikube', contextName: 'minikube', credentialsId: 'jenkins-k8s-token', namespace: '', serverUrl: 'https://192.168.99.5:8443']]) {
+        withKubeCredentials(kubectlCredentials: [[caCertificate: '', clusterName: '', contextName: '', credentialsId: '', namespace: '', serverUrl: '']]) {
           script {
             def pods = groovyMethods.findPodsFromName("${namespace}", "${serviceName}")
             for (podName in pods) {

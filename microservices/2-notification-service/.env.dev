@@ -1,0 +1,9 @@
+ENABLE_APM=0
+NODE_ENV=development
+CLIENT_URL=http://localhost:3000
+RABBITMQ_ENDPOINT=amqp://jobber:jobberpass@localhost:5672
+SENDER_EMAIL=
+SENDER_EMAIL_PASSWORD=
+ELASTIC_SEARCH_URL=http://elastic:admin1234@localhost:9200
+ELASTIC_APM_SERVER_URL=http://localhost:8200
+ELASTIC_APM_SECRET_TOKEN=
