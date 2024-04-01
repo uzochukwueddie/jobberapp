@@ -4,6 +4,7 @@ import { RouteObject, useRoutes } from 'react-router-dom';
 import AppPage from './features/AppPage';
 import ConfirmEmail from './features/auth/components/ConfirmEmail';
 import ResetPassword from './features/auth/components/ResetPassword';
+import VerifyOTP from './features/auth/components/VerifyOTP';
 import BuyerDashboard from './features/buyer/components/Dashboard';
 import Chat from './features/chat/components/Chat';
 import Error from './features/error/Error';
@@ -52,6 +53,14 @@ const AppRouter: FC = () => {
       element: (
         <Suspense>
           <ConfirmEmail />
+        </Suspense>
+      )
+    },
+    {
+      path: 'verify_otp',
+      element: (
+        <Suspense>
+          <VerifyOTP />
         </Suspense>
       )
     },

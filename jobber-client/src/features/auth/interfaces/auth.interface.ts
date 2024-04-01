@@ -13,6 +13,8 @@ export interface IAuthUser {
   profilePicture: string | null;
   updatedAt: Date | null;
   username: string | null;
+  browserName: string | null;
+  deviceType: string | null;
 }
 
 export interface IAuthDocument {
@@ -29,6 +31,8 @@ export interface IAuthDocument {
   updatedAt?: Date;
   passwordResetToken?: string;
   passwordResetExpires?: Date;
+  browserName?: string;
+  deviceType?: string;
 }
 
 export interface IUseAuthSchema {
@@ -43,18 +47,22 @@ export const AUTH_FETCH_STATUS = {
 };
 
 export interface ISignUpPayload {
-  [key: string]: string;
+  [key: string]: string | null | undefined;
   username: string;
   password: string;
   email: string;
   country: string;
   profilePicture: string;
+  browserName: string | null | undefined;
+  deviceType: string | null | undefined;
 }
 
 export interface ISignInPayload {
-  [key: string]: string;
+  [key: string]: string | null | undefined;
   username: string;
   password: string;
+  browserName: string | null | undefined;
+  deviceType: string | null | undefined;
 }
 
 export interface IForgotPassword {

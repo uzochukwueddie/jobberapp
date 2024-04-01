@@ -5,9 +5,16 @@ import { DataTypes, Model, ModelDefined, Optional } from 'sequelize';
 
 const SALT_ROUND = 10;
 
+interface AuthModelInstanceMethods extends Model {
+  prototype: {
+    comparePassword: (password: string, hashedPassword: string) => Promise<boolean>;
+    hashPassword: (password: string) => Promise<string>;
+  }
+}
+
 type AuthUserCreationAttributes = Optional<IAuthDocument, 'id' | 'createdAt' | 'passwordResetToken' | 'passwordResetExpires'>;
 
-const AuthModel: ModelDefined<IAuthDocument, AuthUserCreationAttributes> = sequelize.define('auths', {
+const AuthModel: ModelDefined<IAuthDocument, AuthUserCreationAttributes> & AuthModelInstanceMethods = sequelize.define('auths', {
   username: {
     type: DataTypes.STRING,
     allowNull: false
@@ -41,6 +48,22 @@ const AuthModel: ModelDefined<IAuthDocument, AuthUserCreationAttributes> = seque
     allowNull: false,
     defaultValue: 0
   },
+  browserName: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  deviceType: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  otp: {
+    type: DataTypes.STRING
+  },
+  otpExpiration: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: new Date()
+  },
   createdAt: {
     type: DataTypes.DATE,
     defaultValue: Date.now
@@ -66,7 +89,7 @@ const AuthModel: ModelDefined<IAuthDocument, AuthUserCreationAttributes> = seque
       fields: ['emailVerificationToken']
     },
   ]
-});
+}) as ModelDefined<IAuthDocument, AuthUserCreationAttributes> & AuthModelInstanceMethods;
 
 AuthModel.addHook('beforeCreate', async (auth: Model) => {
   const hashedPassword: string = await hash(auth.dataValues.password as string, SALT_ROUND);

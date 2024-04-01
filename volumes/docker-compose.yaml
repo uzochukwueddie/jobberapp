@@ -72,7 +72,7 @@ services:
 
   elasticsearch:
     container_name: elasticsearch_container
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.2
     restart: always
     environment:
       ES_JAVA_OPTS: -Xmx1g -Xms1g
@@ -97,7 +97,7 @@ services:
   
   kibana:
     container_name: kibana_container
-    image: docker.elastic.co/kibana/kibana:8.11.0
+    image: docker.elastic.co/kibana/kibana:8.12.2
     restart: always
     environment:
       - ELASTICSEARCH_HOSTS=["http://elasticsearch_container:9200"]
@@ -115,7 +115,7 @@ services:
       - elasticsearch
 
   apmServer:
-    image: docker.elastic.co/apm/apm-server:8.11.0
+    image: docker.elastic.co/apm/apm-server:8.12.2
     container_name: apm_server_container
     ports:
       - 8200:8200
@@ -136,7 +136,7 @@ services:
   
   metricbeat:
     container_name: metricbeat_container
-    image: docker.elastic.co/beats/metricbeat:8.11.0
+    image: docker.elastic.co/beats/metricbeat:8.12.2
     user: root
     ports:
       - 5066:5066
@@ -156,7 +156,7 @@ services:
 
   heartbeat:
     container_name: heartbeat_container
-    image: docker.elastic.co/beats/heartbeat:8.11.0
+    image: docker.elastic.co/beats/heartbeat:8.12.2
     user: root
     hostname: heartbeat
     cap_add:

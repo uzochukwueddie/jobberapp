@@ -31,11 +31,15 @@ export interface IAuthDocument {
   profilePicture?: string;
   emailVerified?: number;
   emailVerificationToken?: string;
+  browserName?: string;
+  deviceType?: string;
+  otp?: string;
+  otpExpiration?: Date;
   createdAt?: Date;
   updatedAt?: Date;
   passwordResetToken?: string;
   passwordResetExpires?: Date;
-  comparePassword(password: string): Promise<boolean>;
+  comparePassword(password: string, hashedPassword: string): Promise<boolean>;
   hashPassword(password: string): Promise<string>;
 }
 
@@ -54,6 +58,7 @@ export interface IEmailMessageDetails {
   verifyLink?: string;
   resetLink?: string;
   username?: string;
+  otp?: string;
 }
 
 export interface ISignUpPayload {

@@ -33,6 +33,11 @@ class AuthService {
     return response;
   }
 
+  async verifyOTP(otp: string, body: { browserName: string, deviceType: string }): Promise<AxiosResponse> {
+    const response: AxiosResponse = await axiosAuthInstance.put(`/verify-otp/${otp}`, body);
+    return response;
+  }
+
   async resendEmail(data: { userId: number, email: string }): Promise<AxiosResponse> {
     const response: AxiosResponse = await axiosAuthInstance.post('/resend-email', data);
     return response;

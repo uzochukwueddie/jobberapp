@@ -55,6 +55,19 @@ export const authApi = api.injectEndpoints({
       },
       invalidatesTags: ['Auth']
     }),
+    verifyOTP: build.mutation<IResponse, { otp: string; browserName: string; deviceType: string }>({
+      query(data) {
+        return {
+          url: `auth/verify-otp/${data.otp}`,
+          method: 'PUT',
+          body: {
+            browserName: data.browserName,
+            deviceType: data.deviceType
+          }
+        };
+      },
+      invalidatesTags: ['Auth']
+    }),
     forgotPassword: build.mutation<IResponse, string>({
       query(email: string) {
         return {
@@ -113,6 +126,7 @@ export const {
   useLogoutMutation,
   useResendEmailMutation,
   useVerifyEmailMutation,
+  useVerifyOTPMutation,
   useForgotPasswordMutation,
   useResetPasswordMutation
 } = authApi;

@@ -1,4 +1,5 @@
 import { ChangeEvent, FC, ReactElement, useRef, useState } from 'react';
+import { useDeviceData, useMobileOrientation } from 'react-device-detect';
 import { FaCamera, FaChevronLeft, FaEye, FaEyeSlash, FaTimes } from 'react-icons/fa';
 import Alert from 'src/shared/alert/Alert';
 import Button from 'src/shared/button/Button';
@@ -21,6 +22,8 @@ import { registerUserSchema } from '../schemes/auth.schema';
 import { useSignUpMutation } from '../services/auth.service';
 
 const RegisterModal: FC<IModalBgProps> = ({ onClose, onToggle }): ReactElement => {
+  const mobileOrientation = useMobileOrientation();
+  const deviceData = useDeviceData(window.navigator.userAgent);
   const [step, setStep] = useState<number>(1);
   const [alertMessage, setAlertMessage] = useState<string>('');
   const [country, setCountry] = useState<string>('Select Country');
@@ -32,7 +35,9 @@ const RegisterModal: FC<IModalBgProps> = ({ onClose, onToggle }): ReactElement =
     password: '',
     email: '',
     country: '',
-    profilePicture: ''
+    profilePicture: '',
+    browserName: deviceData.browser.name,
+    deviceType: mobileOrientation.isLandscape ? 'browser' : 'mobile'
   });
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dispatch = useAppDispatch();

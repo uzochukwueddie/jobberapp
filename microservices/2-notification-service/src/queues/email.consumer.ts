@@ -19,13 +19,14 @@ async function consumeAuthEmailMessages(channel: Channel): Promise<void> {
     const jobberQueue = await channel.assertQueue(queueName, { durable: true, autoDelete: false });
     await channel.bindQueue(jobberQueue.queue, exchangeName, routingKey);
     channel.consume(jobberQueue.queue, async (msg: ConsumeMessage | null) => {
-      const { receiverEmail, username, verifyLink, resetLink, template } = JSON.parse(msg!.content.toString());
+      const { receiverEmail, username, verifyLink, resetLink, template, otp } = JSON.parse(msg!.content.toString());
       const locals: IEmailLocals = {
         appLink: `${config.CLIENT_URL}`,
         appIcon: 'https://i.ibb.co/Kyp2m0t/cover.png',
         username,
         verifyLink,
-        resetLink
+        resetLink,
+        otp
       };
       await sendEmail(template, receiverEmail, locals);
       channel.ack(msg!);

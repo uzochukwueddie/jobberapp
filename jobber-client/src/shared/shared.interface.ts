@@ -1,5 +1,5 @@
 import { SerializedError } from '@reduxjs/toolkit';
-import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
+import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { ChangeEvent, CSSProperties, Dispatch, KeyboardEvent, ReactNode, SetStateAction } from 'react';
 import { IAuthDocument, IAuthResponse, IResetPassword, ISignInPayload, ISignUpPayload } from 'src/features/auth/interfaces/auth.interface';
 import { IBuyerDocument } from 'src/features/buyer/interfaces/buyer.interface';
@@ -46,6 +46,8 @@ export interface IResponse {
   review?: IReviewDocument;
   reviews?: IReviewDocument[];
   notifications?: IOrderNotifcation[];
+  browserName?: string;
+  deviceType?: string;
 }
 
 export interface IBannerProps {

@@ -16,7 +16,7 @@ export async function create(req: Request, res: Response): Promise<void> {
   if (error?.details) {
     throw new BadRequestError(error.details[0].message, 'SignUp create() method error');
   }
-  const { username, email, password, country, profilePicture } = req.body;
+  const { username, email, password, country, profilePicture, browserName, deviceType } = req.body;
   const checkIfUserExist: IAuthDocument | undefined = await getUserByUsernameOrEmail(username, email);
   if (checkIfUserExist) {
     throw new BadRequestError('Invalid credentials. Email or Username', 'SignUp create() method error');
@@ -36,7 +36,9 @@ export async function create(req: Request, res: Response): Promise<void> {
     password,
     country,
     profilePicture: uploadResult?.secure_url,
-    emailVerificationToken: randomCharacters
+    emailVerificationToken: randomCharacters,
+    browserName,
+    deviceType
   } as IAuthDocument;
   const result: IAuthDocument = await createAuthUser(authData) as IAuthDocument;
   const verificationLink = `${config.CLIENT_URL}/confirm_email?v_token=${authData.emailVerificationToken}`;

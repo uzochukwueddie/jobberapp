@@ -111,6 +111,19 @@ export async function getAuthUserByPasswordToken(token: string): Promise<IAuthDo
   }
 }
 
+export async function getAuthUserByOTP(otp: string): Promise<IAuthDocument | undefined> {
+  try {
+    const user: Model = await AuthModel.findOne({
+      where: {
+        [Op.and]: [{ otp }, { otpExpiration: { [Op.gt]: new Date() }}]
+      },
+    }) as Model;
+    return user?.dataValues;
+  } catch (error) {
+    log.error(error);
+  }
+}
+
 export async function updateVerifyEmailField(authId: number, emailVerified: number, emailVerificationToken?: string): Promise<void> {
   try {
     await AuthModel.update(
@@ -150,6 +163,22 @@ export async function updatePassword(authId: number, password: string): Promise<
         passwordResetExpires: new Date()
       },
       { where: { id: authId }},
+    );
+  } catch (error) {
+    log.error(error);
+  }
+}
+
+export async function updateUserOTP(authId: number, otp: string, otpExpiration: Date, browserName: string, deviceType: string): Promise<void> {
+  try {
+    await AuthModel.update(
+      {
+        otp,
+        otpExpiration,
+        ...(browserName.length > 0 && { browserName }),
+        ...(deviceType.length > 0 && { deviceType })
+      },
+      { where: { id: authId }}
     );
   } catch (error) {
     log.error(error);
