@@ -1,4 +1,3 @@
-
 name: Publish
 on:
   push:
@@ -12,16 +11,18 @@ jobs:
       contents: read
       packages: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-node@v3
         with:
-          node-version: '20.x'
+          node-version: "20.x"
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@uzochukwueddie"
       - run: npm install
       - run: npm run build
-      - run: |
-          echo @<your-github-username>:https://npm.pkg.github.com/ > build/.npmrc
-          echo '//npm.pkg.github.com/:_authToken=${NPM_TOKEN}' >> build/.npmrc
-      - run: npm publish
+      # - run: |
+      #     echo @uzochukwueddie:https://npm.pkg.github.com/ > build/.npmrc
+      #     echo '//npm.pkg.github.com/:_authToken=${JOBBER_NPM_TOKEN}' >> build/.npmrc
+      - run: npm publish --provenance --access public # this makes the package public
         working-directory: ./build
         env:
-          NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
