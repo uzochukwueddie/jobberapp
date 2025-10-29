@@ -110,7 +110,7 @@ services:
     networks:
       - elastic
     volumes:
-      - ./kibana.yml/:/usr/share/kibana/config/kibana.yml:ro
+      - ./kibana.yml:/usr/share/kibana/config/kibana.yml:ro
     depends_on: 
       - elasticsearch
 
